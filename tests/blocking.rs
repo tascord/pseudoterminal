@@ -98,3 +98,12 @@ fn set_term_size() {
 
     terminal.close().expect("");
 }
+
+#[test]
+fn death() {
+    #[cfg(unix)]
+    let mut cmd = Command::new("echo");
+    let terminal = cmd.spawn_terminal().expect("should be spawnable");
+
+    assert_eq!(terminal.is_dead().unwrap(), true);
+}

@@ -1,10 +1,10 @@
 use std::fs::{File, OpenOptions};
 use std::io;
-use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
+use std::os::fd::{AsRawFd, FromRawFd, OwnedFd, RawFd};
 use std::os::unix::process::CommandExt;
 use std::process::Command;
 
-use nix::fcntl::FcntlArg::F_SETFD;
+use nix::fcntl::FcntlArg::{F_GETFD, F_SETFD};
 use nix::fcntl::{fcntl, FcntlArg, FdFlag, OFlag as F};
 use nix::libc::{close, ioctl, setsid, TIOCGWINSZ, TIOCSCTTY, TIOCSWINSZ};
 use nix::pty::{grantpt, posix_openpt, ptsname, unlockpt, PtyMaster, Winsize};
@@ -105,6 +105,11 @@ impl TerminalHandle {
         }
 
         Ok(())
+    }
+
+    pub(crate) fn is_dead(&self) -> io::Result<bool> {
+        println!("Checking death state");
+        Ok(fcntl(self.0.as_raw_fd(), F_GETFD)? == -1)
     }
 }
 

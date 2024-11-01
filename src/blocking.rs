@@ -42,6 +42,10 @@ impl Terminal {
 
         Ok(())
     }
+
+    pub fn is_dead(&self) -> io::Result<bool> {
+        self.handle.is_dead()
+    }
 }
 
 pub trait CommandExt {
