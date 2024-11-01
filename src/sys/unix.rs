@@ -108,7 +108,6 @@ impl TerminalHandle {
     }
 
     pub(crate) fn is_dead(&self) -> io::Result<bool> {
-        println!("Checking death state");
         Ok(fcntl(self.0.as_raw_fd(), F_GETFD)? == -1)
     }
 }
